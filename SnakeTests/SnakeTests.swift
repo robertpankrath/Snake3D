@@ -1,36 +1,54 @@
-//
-//  SnakeTests.swift
-//  SnakeTests
-//
 //  Created by Robert Pankrath on 13.03.16.
 //  Copyright © 2016 Robert Pankrath. All rights reserved.
-//
 
 import XCTest
 @testable import Snake
 
 class SnakeTests: XCTestCase {
+    var snake: Snake!
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        snake = Snake(position: Point(indizes: 1, 1), length: 5, fieldWidth: 10)
+    }
+
+    func testInit() {
+        XCTAssertEqual(snake.fieldWidth, 10)
+        XCTAssertEqual(snake.length, 5)
+        XCTAssertEqual(snake.body.count, 1)
+        XCTAssertEqual(snake.head.indizes, [1, 1])
+        XCTAssertEqual(snake.direction.indizes, [1, 0])
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func testValidateCorrect() {
+        XCTAssertTrue(snake.validate(Point(indizes: 1, 2)))
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testValidateBodyHit() {
+        XCTAssertFalse(snake.validate(Point(indizes: 1, 1)))
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    func testValidateOutOfBounds() {
+        XCTAssertFalse(snake.validate(Point(indizes: 1, -1)))
+        XCTAssertFalse(snake.validate(Point(indizes: 13, 2)))
     }
     
+    func testMove() {
+        snake.body = [Point(indizes: 1, 1), Point(indizes: 1, 2), Point(indizes: 1, 3), Point(indizes: 1, 4), Point(indizes: 1, 5)]
+        snake.direction = Point(indizes: 0, 1)
+        snake.move()
+        XCTAssertTrue(snake.alive)
+        XCTAssertEqual(snake.body.count, snake.length)
+        XCTAssertEqual(snake.body.last, Point(indizes: 1, 6))
+        XCTAssertEqual(snake.body.first,
+            Point(indizes: 1, 2))
+    }
+    
+    func testMoveDie() {
+        snake.fieldWidth = 6
+        snake.body = [Point(indizes: 1, 1), Point(indizes: 1, 2), Point(indizes: 1, 3), Point(indizes: 1, 4), Point(indizes: 1, 5)]
+        snake.direction = Point(indizes: 0, 1)
+        snake.move()
+        XCTAssertFalse(snake.alive)
+    }
 }
