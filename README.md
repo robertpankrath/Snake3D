@@ -1,2 +1,2 @@
 # Snake3D
-A multidimensional Snake game implementation and an isometric 3D screensaver visualization
+A multidimensional Snake game implementation and a screensaver with an isometric 3D visualization
